@@ -22,3 +22,6 @@
 3. Visible focus on all interactive elements
 4. Errors announced with aria-live
 5. Full keyboard navigation
+
+## Sketches
+![Wireframes](assets/wireframes.png)
