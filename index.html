@@ -23,10 +23,104 @@
         </nav>
     </header>
 
-    <main id="main"></main>
+    <main id="main" tabindex="-1">
+
+        <section id="about" aria-labelledby="about-heading">
+            <h2 id="about-heading">About</h2>
+            <p>Expense Tracker helps students record daily expenses, search them with regular expressions and stay under a spending cap.</p>
+            <p>Author: Chavyra Bangadi - 2026</p>
+            <p><a href="https://github.com/cbangadits-gif">GitHub</a></p>
+            <p>Email: <a href="mailto:c.bangadits@alustudent.com">c.bangadits@alustudent.com</a></p>
+        </section>
+
+        <section id="dashboard" aria-labelledby="dashboard-heading">
+            <h2 id="dashboard-heading">Dashboard</h2>
+            <dl>
+                <div><dt>Total Records</dt><dd id="stat-count">0</dd></div>
+                <div><dt>Total Amount</dt><dd id="stat-total">0</dd></div>
+                <div><dt>Top category</dt><dd id="stat-top">-</dd></div>
+            </dl>
+            <div>
+                <p>Spending cap: <span id="budget-limit">0</span></p>
+                <p id="cap-message" role="status" aria-live="polite"></p>
+            </div>
+
+            <h3>Last 7 days</h3>
+            <ol id="trend"></ol>
+        </section>
+
+        <section id="records" aria-labelledby="records-heading">
+            <h2 id="records-heading">Records</h2>
+            <label for="search">Search (regular expression)</label>
+            <input type="text" id="search" placeholder="e.g. (coffee|tea)" aria-describedby="search-status">
+            <label><input type="checkbox" id="case-sensitive"> Case Sensitive</label>
+            <div>
+                <button type="button" id="sort-date">Sort by date</button>
+                <button type="button" id="sort-amount">Sort by amount</button>
+            </div>
+
+            <p id="search-status" role="status" aria-live="polite"></p>
+
+            <table>
+                <caption>Expense Records</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="records-body"></tbody>
+            </table>
+        </section>
+
+        <section id="add" aria-labelledby="add-heading">
+            <h2 id="add-heading">Add Expense</h2>
+            <form id="add-form" novalidate>
+                <div>
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description" requiredaria-describedby="description-error">
+                    <p class="error" id="description-error" aria-live="polite"></p>
+                </div>
+                <div>
+                    <label for="amount">Amount</label>
+                    <input type="text" id="amount" name="amount" inputmode="decimal" placeholder="12.45" required aria-describedby="amount-error">
+                    <p class="error" id="amount-error" aria-live="polite"></p>
+                </div>
+                <div>
+                    <label for="currency">Currency</label>
+                    <select id="currency" name="currency">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="RWF">RWF</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" list="category-list" required aria-describedby="category-error">
+                    <datalist id="category-list"></datalist>
+                    <p class="error" id="category-error" aria-live="polite"></p>
+                </div>
+                <div>
+                    <label for="date">Date (YYYY-MM-DD)</label>
+                    <input type="text" id="date" name="date" inputmode="numeric" placeholder="2026-10-01" required aria-describedby="date-error">
+                    <p class="error" id="date-error" aria-live="polite"></p>
+                </div>
+
+                <button type="submit">Add</button>
+            </form>
+        </section>
+
+        <section id="settings" aria-labelledby="settings-heading">
+            <h2 id="settings-heading">Settings</h2>
+            <p>Currency, exchange rate, spending cap, categories and import/export will be here.</p>
+        </section>
+    </main>
 
     <footer>
-        <p>Built for M2</p>
+        <p>Chavyra Bangadi - 2026 - <a href="https://github.com/cbangadits-gif">GitHub</a></p>
     </footer>
 </body>
 </html>
