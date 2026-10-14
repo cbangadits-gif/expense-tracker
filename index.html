@@ -26,101 +26,97 @@
     <main id="main" tabindex="-1">
 
         <section id="about" aria-labelledby="about-heading">
-            <h2 id="about-heading">About</h2>
-            <p>Expense Tracker helps students record daily expenses, search them with regular expressions and stay under a spending cap.</p>
-            <p>Author: Chavyra Bangadi - 2026</p>
-            <p><a href="https://github.com/cbangadits-gif">GitHub</a></p>
-            <p>Email: <a href="mailto:c.bangadits@alustudent.com">c.bangadits@alustudent.com</a></p>
+            <h2 id="about-heading" tabindex="-1">About</h2>
+            <p>Expense Tracker is a small web app that helps students see where their money goes, search past expenses with regular expressions and stay under a monthly spending cap.</p>
+            <h3>What you can do</h3>
+            <ul class="feature-grid">
+                <li><strong>Track expenses</strong>Add, edit and delete records with a description, amount, currency, category and date</li>
+                <li><strong>Search with Regex</strong>Type a regular expression and see matches highlighted instantly.</li>
+                <li><strong>Watch your budget</strong>Set a spending cap and get a clear message when you get close or go over.</li>
+                <li><strong>Keep your data</strong>Everything is saved in your browser. Import or export it as JSON at any time.</li>
+            </ul>
+            <h3>How to use it</h3>
+            <ol>
+                <li>Open <strong>Add</strong> and enter your first expense.</li>
+                <li>Check the <strong>Dashboard</strong> for totals,top category and 7-day trend.</li>
+                <li>Use <strong>Records</strong> to search, sort, edit or delete.</li>
+                <li>Set your cap, currencies and backups in <strong>Settings</strong></li>
+            </ol>
+            <h3>Keyboard and accessibility</h3>
+            <ul>
+                <li>Press <kbd>Tab</kbd> to move between controls; the first stop is the skip link.</li>
+                <li>Press <kbd>Enter</kbd> or <kbd>Space</kbd> to active buttons and menu items.</li>
+                <li>Messages are announced to screen readers, and colors never carry meaning alone.</li>
+            </ul>
+            <h3>Built with</h3>
+            <p>Plain HTML, CSS and JavaScript(ES modules), no framework. Data stays on your device in <code>localstorage</code>.</p>
+            <h3>Author</h3>
+            <p>Chavy.Bangadi, 2026</p>
+            <p><a href="https://github.com/cbangadits-gif">GitHub</a> . <a href="mailto:c.bangadits@alustudent.com">c.bangadits@alustudent.com</a></p>
         </section>
 
         <section id="dashboard" aria-labelledby="dashboard-heading">
-            <h2 id="dashboard-heading">Dashboard</h2>
+            <h2 id="dashboard-heading" tabindex="-1">Dashboard</h2>
             <dl>
-                <div><dt>Total Records</dt><dd id="stat-count">0</dd></div>
-                <div><dt>Total Amount</dt><dd id="stat-total">0</dd></div>
-                <div><dt>Top category</dt><dd id="stat-top">-</dd></div>
+                <div><dt>Total Records</dt><dd id="stat-count">12</dd></div>
+                <div><dt>Total Amount</dt><dd id="stat-total">1,490.14 RWF</dd></div>
+                <div><dt>Top category</dt><dd id="stat-top">Fees</dd></div>
             </dl>
             <div>
-                <p>Spending cap: <span id="budget-limit">0</span></p>
-                <p id="cap-message" role="status" aria-live="polite"></p>
+                <h3>Spending cap</h3>
+                <p>Spending cap: <span id="budget-limit">1,500.00 RWF</span></p>
+                <div class="meter" data-state="near" aria-hidden="true"><div class="meter-fill" style="--w:99%"></div></div>
+                <p id="cap-message" role="status" aria-live="polite" class="cap-near">Careful, you are close to your cap. 9,86 RWF left.</p>
             </div>
-
+            <div>
             <h3>Last 7 days</h3>
-            <ol id="trend"></ol>
+            <ol id="trend">
+                <li style="--h:30"></li><li style="--h:70"></li><li style="--h:20"></li><li style="--h:100"></li><li style="--h:45"></li><li style="--h:65"></li><li style="--h:35"></li>
+            </ol>
+            </div>
         </section>
 
         <section id="records" aria-labelledby="records-heading">
-            <h2 id="records-heading">Records</h2>
+            <h2 id="records-heading" tabindex="-1">Records</h2>
             <label for="search">Search (regular expression)</label>
-            <input type="text" id="search" placeholder="e.g. (coffee|tea)" aria-describedby="search-status">
+            <input type="search" id="search" placeholder="e.g. (coffee|tea)" aria-describedby="search-status">
             <label><input type="checkbox" id="case-sensitive"> Case Sensitive</label>
-            <div>
+            <div class="sort-buttons">
                 <button type="button" id="sort-date">Sort by date</button>
                 <button type="button" id="sort-amount">Sort by amount</button>
             </div>
 
-            <p id="search-status" role="status" aria-live="polite"></p>
+            <p id="search-status" role="status" aria-live="polite">4 results of 12</p>
 
             <table>
-                <caption>Expense Records</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="records-body"></tbody>
+                <caption class="visually-hidden">Expense Records</caption>
+                <thead><tr><th scope="col">Date</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col">Amount</th><th scope="col">Actions</th></tr></thead>
+                <tbody id="records-body">
+                    <tr><td data-label="Date">2026-10-08</td><td data-label="Description">Lunch at cafeteria</td><td data-label="Category">Food</td><td data-label="Amount">12.50 USD</td><td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td></tr>
+                    <tr><td data-label="Date">2026-10-07</td><td data-label="Description"><mark>Coffee</mark> with friends</td><td data-label="Category">Leisure</td><td data-label="Amount">8.75 USD</td><td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td></tr>
+                </tbody>
             </table>
         </section>
 
         <section id="add" aria-labelledby="add-heading">
-            <h2 id="add-heading">Add Expense</h2>
+            <h2 id="add-heading" tabindex="-1">Add Expense</h2>
             <form id="add-form" novalidate>
-                <div>
-                    <label for="description">Description</label>
-                    <input type="text" id="description" name="description" requiredaria-describedby="description-error">
-                    <p class="error" id="description-error" aria-live="polite"></p>
-                </div>
-                <div>
-                    <label for="amount">Amount</label>
-                    <input type="text" id="amount" name="amount" inputmode="decimal" placeholder="12.45" required aria-describedby="amount-error">
-                    <p class="error" id="amount-error" aria-live="polite"></p>
-                </div>
-                <div>
-                    <label for="currency">Currency</label>
-                    <select id="currency" name="currency">
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="RWF">RWF</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="category">Category</label>
-                    <input type="text" id="category" name="category" list="category-list" required aria-describedby="category-error">
-                    <datalist id="category-list"></datalist>
-                    <p class="error" id="category-error" aria-live="polite"></p>
-                </div>
-                <div>
-                    <label for="date">Date (YYYY-MM-DD)</label>
-                    <input type="text" id="date" name="date" inputmode="numeric" placeholder="2026-10-01" required aria-describedby="date-error">
-                    <p class="error" id="date-error" aria-live="polite"></p>
-                </div>
-
+                <div><label for="description">Description</label><input type="text" id="description" required aria-describedby="description-error"><p class="error" id="description-error" aria-live="polite"></p></div>
+                <div><label for="amount">Amount</label><input type="text" id="amount" inputmode="decimal" placeholder="12.45" required aria-describedby="amount-error"><p class="error" id="amount-error" aria-live="polite"></p></div>
+                <div><label for="currency">Currency</label><select id="currency"><option>USD</option><option>EUR</option><option>RWF</option></select></div>
+                <div><label for="category">Category</label><input type="text" id="category" required aria-describedby="category-error"><p class="error" id="category-error" aria-live="polite"></p></div>
+                <div><label for="date">Date (YYYY-MM-DD)</label><input type="text" id="date" placeholder="2026-10-01" required aria-describedby="date-error"><p class="error" id="date-error" aria-live="polite"></p></div>
                 <button type="submit">Add</button>
             </form>
         </section>
 
         <section id="settings" aria-labelledby="settings-heading">
-            <h2 id="settings-heading">Settings</h2>
+            <h2 id="settings-heading" tabindex="-1">Settings</h2>
             <p>Currency, exchange rate, spending cap, categories and import/export will be here.</p>
         </section>
     </main>
-
-    <footer>
-        <p>Chavyra Bangadi - 2026 - <a href="https://github.com/cbangadits-gif">GitHub</a></p>
-    </footer>
+    <footer><p>Chavy.Bangadi - 2026 - <a href="https://github.com/cbangadits-gif">GitHub</a></p></footer>
 </body>
 </html>
+
+            
