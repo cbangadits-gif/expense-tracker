@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Tests</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 0 auto; padding: 1rem; line-height: 1.5; color: #1a1a1a; background: #f1f4f9; }
+        h1 { margin-bottom: 0.25rem; }
+        h2 { margin: 1.5rem 0 0.5rem; font-size: 1.1rem; }
+        #summary { padding: 0.75rem 1rem; border-radius: 8px; font-weight: 700; }
+        #summary.pass { background: #e6f4ea; color: #0d652d; }
+        #summary.fail { background: #fce8e6; color: #b3261e; }
+        ul { list-style: none; padding: 0; margin: 0; background: #fff; border: 1px solid #dadce0; border-radius: 8px; }
+        li { padding: 0.4rem 0.75rem; border-top: 1px solid #eee; font-family: ui-monospace, monospace; font-size: 0.9rem; }
+        li:first-child { border-top: 0; }
+        .ok::before { content: "\2714  PASS  "; color: #0d652d; font-weight: 700; }
+        .ko::before { content: "\2718  FAIL  "; color: #b3261e; font-weight: 700; }
+        .ko { background: #fff5f4; }
+    </style>
+</head>
+<body>
+    <h1>Tests</h1>
+    <p>Run automatically when the page loads. Open the console (F12) for details.</p>
+    <p id="summary" role="status" aria-live="polite">Running...</p>
+    <div id="results"></div>
+
+    <script type="module">
+        import {
+            RE, validateDescription, validateAmount, validateDate,
+            validateCategory, validateId, validateRate
+        } from './scripts/validators.js';
+
+        let passed = 0;
+        let failed = 0;
+        const results = document.querySelector('#results');
+
+        function group(title) {
+            const h = document.createElement('h2');
+            h.textContent = title;
+            const ul = document.createElement('ul');
+            results.append(h, ul);
+            return ul;
+        }
+
+        function check(list, label, actual, expected) {
+            const good = actual === expected;
+            good ? passed++ : failed++;
+            const li = document.createElement('li');
+            li.className = good ? 'ok' : 'ko';
+            li.textContent = `${label} -> expected ${expected}, got ${actual}`;
+            list.append(li);
+            if (!good) console.error('FAIL:', label);
+        }
+
+        // [fn, title, validValues, invalidValues]
+        const suites = [
+            [validateDescription, 'Description', ['Lunch at cafeteria', 'A', 'Bus pass'], ['', ' Lunch', 'Lunch ', 'Bus bus pass']],
+            [validateAmount, 'Amount', ['0', '12', '12.5', '12.50', '100'], ['', '012', '1.234', '-5', 'abc', '12.', '1,5']],
+            [validateDate, 'Date', ['2026-10-08', '2024-02-29'], ['2026-13-01', '2026-02-30', '2026-1-01', '26-10-01', '2025-02-29', '']],
+            [validateCategory, 'Category', ['Food', 'Fast-food', 'Study materials'], ['', 'Food1', 'A  B', '-Food', 'Food-', 'Caf\u00e9']],
+            [validateId, 'Id (lookahead)', ['rec_0001', 'rec_42'], ['0001', 'REC_1', 'rec_', '']],
+            [validateRate, 'Exchange rate (negative lookahead)', ['1.08', '1', '0.5'], ['0', '0.0', 'abc', '-1', '']],
+        ];
+
+        for (const [fn, title, valid, invalid] of suites) {
+            const list = group(title);
+            valid.forEach((v) => check(list, `${title}: "${v}"`, fn(v).valid, true));
+            invalid.forEach((v) => check(list, `${title}: "${v}"`, fn(v).valid, false));
+        }
+
+        const dup = group('Duplicate word (back-reference)');
+        check(dup, '"bus bus pass"', RE.duplicateWord.test('bus bus pass'), true);
+        check(dup, '"the Bus bus"', RE.duplicateWord.test('the Bus bus'), true);
+        check(dup, '"bus pass"', RE.duplicateWord.test('bus pass'), false);
+
+        const summary = document.querySelector('#summary');
+        summary.textContent = `${passed} passed, ${failed} failed`;
+        summary.className = failed === 0 ? 'pass' : 'fail';
+    </script>
+</body>
+</html>
