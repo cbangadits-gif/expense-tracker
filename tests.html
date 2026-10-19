@@ -53,7 +53,6 @@
             if (!good) console.error('FAIL:', label);
         }
 
-        // [fn, title, validValues, invalidValues]
         const suites = [
             [validateDescription, 'Description', ['Lunch at cafeteria', 'A', 'Bus pass'], ['', ' Lunch', 'Lunch ', 'Bus bus pass']],
             [validateAmount, 'Amount', ['0', '12', '12.5', '12.50', '100'], ['', '012', '1.234', '-5', 'abc', '12.', '1,5']],
