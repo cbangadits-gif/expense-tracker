@@ -1,5 +1,6 @@
 import { addRecord, getRecords, deleteRecord, updateRecord } from './state.js';
 import { renderRecords, showFieldError } from './ui.js';
+import { sortRecords } from './sort.js';
 import {
     validateDescription,
     validateAmount,
@@ -7,6 +8,33 @@ import {
     validateDate,
 } from './validators.js';
 
+let editingId = null;
+let sortKey = null;
+let sortDirection = 'asc';
+
+function sortedRecords() {
+    return sortRecords(getRecords(), sortKey, sortDirection);
+}
+const SORT_BUTTONS = [
+    ['sort-date', 'date'],
+    ['sort-description', 'description'],
+    ['sort-amount', 'amount'],
+];
+function setSort(key) {
+    if (key === sortKey) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortKey = key;
+        sortDirection = 'asc';
+    }
+    SORT_BUTTONS.forEach(([id, name]) => {
+        document.getElementById(id)?.setAttribute('aria-pressed', name === sortKey ? 'true': 'false');
+    });
+    renderRecords(sortedRecords(), null, editingId);
+}
+    SORT_BUTTONS.forEach(([id, key]) => {
+        document.getElementById(id)?.addEventListener('click', () => setSort(key));
+    });
 const SECTIONS = ['about', 'dashboard', 'records', 'add', 'settings'];
 const DEFAULT_SECTION = 'dashboard';
 const links = document.querySelectorAll('nav a');
@@ -72,20 +100,19 @@ form.addEventListener('submit', (event) => {
      category: document.getElementById('category').value,
      date: document.getElementById('date').value,
   });
-  renderRecords(getRecords(), record.id); 
+  renderRecords(sortedRecords(), record.id); 
 
   form.reset();
   formStatus.textContent = `Expense added: ${record.description} (${record.id}).`;
   document.getElementById('description').focus();
 });
-renderRecords(getRecords());
+
 
 const recordsBody = document.querySelector('#records-body');
 const dialog = document.querySelector('#confirm-dialog');
 const confirmText = document.querySelector('#confirm-text');
 let pendingDeleteId = null;
 
-let editingId = null;
 const EDIT_VALIDATORS = {
     'edit-description': validateDescription,
     'edit-amount': validateAmount,
@@ -108,22 +135,22 @@ function saveEdit() {
         amount: document.getElementById('edit-amount').value.trim(),
         category : document.getElementById('edit-category').value.trim(),
         date: document.getElementById('edit-date').value.trim(),
-    });
+    })
     editingId = null;
-    renderRecords(getRecords());
+    renderRecords(sortedRecords());
  }    
 
 recordsBody.addEventListener('click', (event) => {
   const editBtn = event.target.closest('.btn-edit');
   if (editBtn) {
     editingId = editBtn.dataset.id;
-    renderRecords(getRecords(), null, editingId);
+    renderRecords(sortedRecords(), null, editingId);
     document.getElementById('edit-date')?.focus();
     return;
   }const cancelBtn = event.target.closest('.btn-cancel');
   if (cancelBtn) {
     editingId = null;
-    renderRecords(getRecords());
+    renderRecords(sortedRecords());
     return;
   }
   const saveBtn = event.target.closest('.btn-save');
@@ -144,7 +171,7 @@ recordsBody.addEventListener('click', (event) => {
 dialog.addEventListener('close', () => {
   if (dialog.returnValue === 'confirm' && pendingDeleteId) {
     deleteRecord(pendingDeleteId);
-    renderRecords(getRecords());
+    renderRecords(sortedRecords());
   }
   pendingDeleteId = null;
   dialog.returnValue = '';
@@ -153,7 +180,7 @@ dialog.addEventListener('close', () => {
 document.addEventListener('keydown', (e) =>{
     if (e.key === 'Escape' && editingId && !dialog.open) {
         editingId = null;
-        renderRecords(getRecords());
+        renderRecords(sortedRecords());
     }
 });
-renderRecords(getRecords());
+renderRecords(sortedRecords());
