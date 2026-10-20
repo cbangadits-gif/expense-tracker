@@ -30,3 +30,13 @@ export function addRecord({ description, amount, currency, category, date }) {
   saveRecords(records);
   return record;
 }
+
+export function deleteRecord(id) {
+  const beforeLength = records.length;
+  records = records.filter(record => record.id !== id);
+  if (records.length !== beforeLength) {
+    saveRecords(records);
+    return true;
+  }
+  return false;
+}

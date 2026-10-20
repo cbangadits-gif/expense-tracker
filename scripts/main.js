@@ -1,4 +1,4 @@
-import { addRecord, getRecords } from './state.js';
+import { addRecord, getRecords, deleteRecord } from './state.js';
 import { renderRecords, showFieldError } from './ui.js';
 import {
     validateDescription,
@@ -78,4 +78,32 @@ form.addEventListener('submit', (event) => {
   formStatus.textContent = `Expense added: ${record.description} (${record.id}).`;
   document.getElementById('description').focus();
 });
+renderRecords(getRecords());
+
+const recordsBody = document.querySelector('#records-body');
+const dialog = document.querySelector('#confirm-dialog');
+const confirmText = document.querySelector('#confirm-text');
+let pendingDeleteId = null;
+
+recordsBody.addEventListener('click', (event) => {
+  const button = event.target.closest('.btn-danger');
+  if (!button) return;
+
+  pendingDeleteId = button.dataset.id;
+  const record = getRecords().find(item => item.id === pendingDeleteId);
+  if (!record) return;
+
+  confirmText.textContent = `${record.description} (${record.amount} ${record.currency})`;
+  dialog.showModal();
+});
+
+dialog.addEventListener('close', () => {
+  if (dialog.returnValue === 'confirm' && pendingDeleteId) {
+    deleteRecord(pendingDeleteId);
+    renderRecords(getRecords());
+  }
+  pendingDeleteId = null;
+  dialog.returnValue = '';
+});
+
 renderRecords(getRecords());
