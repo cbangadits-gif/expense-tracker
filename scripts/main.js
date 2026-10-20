@@ -1,4 +1,4 @@
-import { addRecord, getRecords, deleteRecord } from './state.js';
+import { addRecord, getRecords, deleteRecord, updateRecord } from './state.js';
 import { renderRecords, showFieldError } from './ui.js';
 import {
     validateDescription,
@@ -85,10 +85,54 @@ const dialog = document.querySelector('#confirm-dialog');
 const confirmText = document.querySelector('#confirm-text');
 let pendingDeleteId = null;
 
+let editingId = null;
+const EDIT_VALIDATORS = {
+    'edit-description': validateDescription,
+    'edit-amount': validateAmount,
+    'edit-category': validateCategory,
+    'edit-date': validateDate,
+}
+
+function saveEdit() {
+    const results = Object.keys(EDIT_VALIDATORS).map((fieldId) => {
+        const result = EDIT_VALIDATORS[fieldId](document.getElementById(fieldId).value);
+        showFieldError(fieldId, result.message);
+        return result.valid;
+    });
+    if (results.includes(false)) {
+        document.querySelector('#records-body [aria-invalid="true"]')?.focus();
+        return; 
+    }
+    updateRecord(editingId,{
+        description: document.getElementById('edit-description').value.trim(),
+        amount: document.getElementById('edit-amount').value.trim(),
+        category : document.getElementById('edit-category').value.trim(),
+        date: document.getElementById('edit-date').value.trim(),
+    });
+    editingId = null;
+    renderRecords(getRecords());
+ }    
+
 recordsBody.addEventListener('click', (event) => {
+  const editBtn = event.target.closest('.btn-edit');
+  if (editBtn) {
+    editingId = editBtn.dataset.id;
+    renderRecords(getRecords(), null, editingId);
+    document.getElementById('edit-date')?.focus();
+    return;
+  }const cancelBtn = event.target.closest('.btn-cancel');
+  if (cancelBtn) {
+    editingId = null;
+    renderRecords(getRecords());
+    return;
+  }
+  const saveBtn = event.target.closest('.btn-save');
+  if(saveBtn) {
+    saveEdit();
+    return;
+  }
   const button = event.target.closest('.btn-danger');
   if (!button) return;
-
   pendingDeleteId = button.dataset.id;
   const record = getRecords().find(item => item.id === pendingDeleteId);
   if (!record) return;
@@ -106,4 +150,10 @@ dialog.addEventListener('close', () => {
   dialog.returnValue = '';
 });
 
+document.addEventListener('keydown', (e) =>{
+    if (e.key === 'Escape' && editingId && !dialog.open) {
+        editingId = null;
+        renderRecords(getRecords());
+    }
+});
 renderRecords(getRecords());

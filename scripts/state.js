@@ -40,3 +40,14 @@ export function deleteRecord(id) {
   }
   return false;
 }
+export function updateRecord(id, changes) {
+  const record = records.find(r => r.id === id);
+  if (!record) return null;
+
+  Object.assign(record, changes);
+  record.updatedAt = new Date().toISOString();
+  record.amount = Number(record.amount);
+
+  saveRecords(records);
+  return record;
+}
