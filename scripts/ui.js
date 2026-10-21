@@ -24,6 +24,26 @@ function createButton(text, extraClass, recordId) {
   button.textContent = text;
   return button;
 }
+function highlight(text, regex) {
+  const fragment = document.createDocumentFragment();
+  const value = String(text);
+  if (!regex) {
+    fragment.append(value);
+    return fragment;
+  }
+  const globalRegex = new RegExp(regex.source, regex.flags + 'g');
+  let lastIndex = 0;
+  for (const match of value.matchAll(globalRegex)) {
+    if (match[0] === '') continue;
+    fragment.append(value.slice(lastIndex, match.index));
+    const mark = document.createElement('mark');
+    mark.textContent = match[0];
+    fragment.append(mark);
+    lastIndex = match.index + match[0].length;
+  }
+  fragment.append(value.slice(lastIndex));
+  return fragment;
+}
 
 function createEditRow(record) {
   const tr = document.createElement ('tr');
@@ -89,7 +109,7 @@ function createEditRow(record) {
   )
   return tr;
 }
-function createRow(record, newId, editingId) {
+function createRow(record, newId, editingId, regex) {
   if (record.id === editingId) return createEditRow(record);
 
   const tr = document.createElement('tr');
@@ -97,7 +117,7 @@ function createRow(record, newId, editingId) {
 
   const chip = document.createElement('span');
   chip.className = 'chip';
-  chip.textContent = record.category;
+  chip.append(highlight(record.category, regex));
 
   const actions = document.createElement('div');
   actions.className = 'actions';
@@ -109,8 +129,8 @@ function createRow(record, newId, editingId) {
   actionsCell.append(actions);
 
   tr.append(
-  createCell('Date', record.date),
-  createCell('Description', record.description),
+  createCell('Date', highlight(record.date, regex)),
+  createCell('Description', highlight(record.description, regex)),
   createCell('Category', chip),
   createCell('Amount', `${record.amount.toFixed(2)} ${record.currency}`),
   createCell('Actions', actions),
@@ -118,16 +138,18 @@ function createRow(record, newId, editingId) {
   return tr;
 }
 
-export function renderRecords(records, newId = null, editingId = null)  {
+export function renderRecords(records, { newId = null, error = '', total = 0, regex = null, editingId = null } = {}) {
   const body = document.getElementById('records-body');
   const table = document.querySelector('#records table');
   const emptyState = document.getElementById('empty-state');
   const status = document.getElementById('search-status');
   
-  body.replaceChildren(...records.map((record) => createRow(record, newId, editingId)));
+  body.replaceChildren(...records.map((record) => createRow(record, newId, editingId, regex)));
 
   table.hidden = records.length === 0;
   emptyState.hidden = records.length > 0;
-  emptyState.textContent = 'No records yet. Open Add to create your first expense.';
-  status.textContent = `${records.length} results of ${records.length}`;
+  emptyState.textContent = total > 0
+  ? 'No record matches your search.'
+  : 'No records yet. Open Add to create your first expense.';
+  status.textContent = error || `${records.length} results of ${total}`;
 }

@@ -1,5 +1,6 @@
 import { addRecord, getRecords, deleteRecord, updateRecord } from './state.js';
 import { renderRecords, showFieldError } from './ui.js';
+import { compileRegex, filterRecords } from './search.js';
 import { sortRecords } from './sort.js';
 import {
     validateDescription,
@@ -11,6 +12,8 @@ import {
 let editingId = null;
 let sortKey = null;
 let sortDirection = 'asc';
+let searchQuery = '';
+let caseSensitive = false;
 
 function sortedRecords() {
     return sortRecords(getRecords(), sortKey, sortDirection);
@@ -20,6 +23,12 @@ const SORT_BUTTONS = [
     ['sort-description', 'description'],
     ['sort-amount', 'amount'],
 ];
+function render (newId = null) {
+    const {regex,error} = compileRegex(searchQuery, caseSensitive);
+    const sorted = sortedRecords();
+    const records = filterRecords(sorted, regex);
+    renderRecords(records, { newId, error, total: sorted.length, regex, editingId});
+}
 function setSort(key) {
     if (key === sortKey) {
         sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -30,7 +39,7 @@ function setSort(key) {
     SORT_BUTTONS.forEach(([id, name]) => {
         document.getElementById(id)?.setAttribute('aria-pressed', name === sortKey ? 'true': 'false');
     });
-    renderRecords(sortedRecords(), null, editingId);
+    render();
 }
     SORT_BUTTONS.forEach(([id, key]) => {
         document.getElementById(id)?.addEventListener('click', () => setSort(key));
@@ -99,8 +108,8 @@ form.addEventListener('submit', (event) => {
      currency: document.getElementById('currency').value,
      category: document.getElementById('category').value,
      date: document.getElementById('date').value,
-  });
-  renderRecords(sortedRecords(), record.id); 
+  })
+  render(record.id); 
 
   form.reset();
   formStatus.textContent = `Expense added: ${record.description} (${record.id}).`;
@@ -137,20 +146,21 @@ function saveEdit() {
         date: document.getElementById('edit-date').value.trim(),
     })
     editingId = null;
-    renderRecords(sortedRecords());
+    render();
  }    
 
 recordsBody.addEventListener('click', (event) => {
   const editBtn = event.target.closest('.btn-edit');
   if (editBtn) {
     editingId = editBtn.dataset.id;
-    renderRecords(sortedRecords(), null, editingId);
+    render();
     document.getElementById('edit-date')?.focus();
     return;
-  }const cancelBtn = event.target.closest('.btn-cancel');
+  }
+  const cancelBtn = event.target.closest('.btn-cancel');
   if (cancelBtn) {
     editingId = null;
-    renderRecords(sortedRecords());
+    render();
     return;
   }
   const saveBtn = event.target.closest('.btn-save');
@@ -171,7 +181,7 @@ recordsBody.addEventListener('click', (event) => {
 dialog.addEventListener('close', () => {
   if (dialog.returnValue === 'confirm' && pendingDeleteId) {
     deleteRecord(pendingDeleteId);
-    renderRecords(sortedRecords());
+    render();
   }
   pendingDeleteId = null;
   dialog.returnValue = '';
@@ -180,7 +190,17 @@ dialog.addEventListener('close', () => {
 document.addEventListener('keydown', (e) =>{
     if (e.key === 'Escape' && editingId && !dialog.open) {
         editingId = null;
-        renderRecords(sortedRecords());
+        render();
     }
 });
-renderRecords(sortedRecords());
+
+document.getElementById('search')?.addEventListener('input', (event) => {
+    searchQuery = event.target.value;
+    render();
+});
+document.getElementById('case-sensitive')?.addEventListener('change', (event) => {
+    caseSensitive = event.target.checked;
+    render();
+})
+
+render();
