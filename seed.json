@@ -1,0 +1,14 @@
+[
+  { "description": "Lunch at cafeteria", "amount": 12.5, "currency": "USD", "category": "Food", "date": "2026-10-21" },
+  { "description": "Monthly bus pass", "amount": 45, "currency": "USD", "category": "Transport", "date": "2026-10-20" },
+  { "description": "Chemistry textbook", "amount": 89.99, "currency": "USD", "category": "Books", "date": "2026-10-19" },
+  { "description": "Coffee with friends", "amount": 8.75, "currency": "USD", "category": "Leisure", "date": "2026-10-19" },
+  { "description": "Pharmacy visit", "amount": 23.4, "currency": "USD", "category": "Health", "date": "2026-10-18" },
+  { "description": "Notebook and pens", "amount": 6.2, "currency": "USD", "category": "Books", "date": "2026-10-17" },
+  { "description": "Dinner at campus restaurant", "amount": 18, "currency": "USD", "category": "Food", "date": "2026-10-16" },
+  { "description": "Taxi to airport", "amount": 35, "currency": "USD", "category": "Transport", "date": "2026-10-15" },
+  { "description": "Cinema ticket", "amount": 9.5, "currency": "EUR", "category": "Leisure", "date": "2026-10-14" },
+  { "description": "Library late fee", "amount": 4, "currency": "USD", "category": "Fees", "date": "2026-10-12" },
+  { "description": "Groceries for the week", "amount": 52.3, "currency": "USD", "category": "Food", "date": "2026-10-10" },
+  { "description": "Phone data bundle", "amount": 15, "currency": "USD", "category": "Fees", "date": "2026-10-08" }
+]

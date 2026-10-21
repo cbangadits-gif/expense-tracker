@@ -173,7 +173,33 @@
 
         <section id="settings" aria-labelledby="settings-heading">
             <h2 id="settings-heading" tabindex="-1">Settings</h2>
-            <p>Currency, exchange rate, spending cap, categories and import/export will be here.</p>
+            <div class="settings-block">
+                <h3>Backup</h3>
+                <p class="settings-help">Save your expenses to a file, restore them from one, or try the app with the sample data.</p>
+                <div class="backup-grid">
+                    <div class="backup-card">
+                        <h4>Export</h4>
+                        <p>Download all your expenses as a JSON file.</p>
+                        <button type="button" id="export-btn">Export JSON</button>
+                    </div>
+                <div class="backup-card">
+                    <h4>Import</h4>
+                    <p>Add the expenses found in a JSON file.</p>
+                    <div class="backup-control">
+                        <label for="import-file">Choose a JSON file.</label>
+                        <input type="file" id="import-file"  accept=".json,application/json">
+                    </div>
+                </div>
+                <div class="backup-card">
+                    <h4>Sample data</h4>
+                    <p>Add 12 examples expenses to try the app.</p> 
+                    <button type="button" id="seed-btn">Load sample data</button>
+                </div>
+            <div>
+                <p id="backup-status" role="status" aria-live="polite"></p>
+                <ul id="backup-errors" class="error"></ul>
+            </div>
+            <p>Currency, exchange rates and the spending cap will be here soon.</p>
         </section>
         <dialog id="confirm-dialog" aria-labelledby="confirm-title">
             <form method="dialog">

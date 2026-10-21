@@ -51,3 +51,12 @@ export function updateRecord(id, changes) {
   saveRecords(records);
   return record;
 }
+
+export function importRecords(list) {
+  const now = new Date().toISOString();
+  list.forEach((item) => {
+    records.push({ id: nextId(), ...item, createdAt: now, updatedAt: now});
+  });
+  saveRecords(records);
+  return list.length;
+}

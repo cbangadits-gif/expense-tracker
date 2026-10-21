@@ -19,7 +19,13 @@ export function saveRecords(records) {
     return false;
   }
 }
-
+export function hasStoredRecords() {
+  try {
+    return localStorage.getItem(STORAGE_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
 
 
 
