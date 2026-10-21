@@ -1,7 +1,8 @@
 import { addRecord, getRecords, deleteRecord, updateRecord } from './state.js';
-import { renderRecords, showFieldError } from './ui.js';
+import { renderRecords, showFieldError, renderDashboard } from './ui.js';
 import { compileRegex, filterRecords } from './search.js';
 import { sortRecords } from './sort.js';
+import { computeStats, lastSevenDays,capStatus } from './stats.js'
 import {
     validateDescription,
     validateAmount,
@@ -14,6 +15,8 @@ let sortKey = null;
 let sortDirection = 'asc';
 let searchQuery = '';
 let caseSensitive = false;
+const BASE_CURRENCY = 'USD';
+const SPENDING_CAP = 1500;
 
 function sortedRecords() {
     return sortRecords(getRecords(), sortKey, sortDirection);
@@ -28,6 +31,16 @@ function render (newId = null) {
     const sorted = sortedRecords();
     const records = filterRecords(sorted, regex);
     renderRecords(records, { newId, error, total: sorted.length, regex, editingId});
+
+    const all = getRecords();
+    const stats = computeStats(all);
+    renderDashboard(
+        stats,
+        lastSevenDays(all),
+        SPENDING_CAP,
+        capStatus(stats.total, SPENDING_CAP, BASE_CURRENCY),
+        BASE_CURRENCY
+    )
 }
 function setSort(key) {
     if (key === sortKey) {

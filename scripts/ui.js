@@ -153,3 +153,27 @@ export function renderRecords(records, { newId = null, error = '', total = 0, re
   : 'No records yet. Open Add to create your first expense.';
   status.textContent = error || `${records.length} results of ${total}`;
 }
+
+export function renderDashboard(stats, trend, cap, status, currency) {
+  document.getElementById('stat-count').textContent = stats.count;
+  document.getElementById('stat-total').textContent = `${stats.total.toFixed(2)} ${currency}`;
+  document.getElementById('stat-top').textContent = stats.topCategory;
+  document.getElementById('budget-limit').textContent = `${cap.toFixed(2)} ${currency}`;
+
+  const meter = document.querySelector('.meter');
+  meter.dataset.state = status.state;
+  meter.querySelector('.meter-fill').style.setProperty('--w', `${Math.min(status.percent, 100)}%`);
+
+  const message = document.getElementById('cap-message');
+  message.textContent = status.message;
+  message.className = `cap-${status.state}`;
+  const isOver = status.state === 'over';
+  message.setAttribute('role', isOver ? 'alert' : 'status');
+  message.setAttribute('aria-live', isOver ? 'assertive' : 'polite');
+
+  const biggest = Math.max(...trend);
+  document.querySelectorAll('#trend li').forEach((bar, index) => {
+    const height = biggest > 0 ? (trend[index] / biggest) * 100 : 0;
+    bar.style.setProperty('--h', String(height));
+  });
+}
