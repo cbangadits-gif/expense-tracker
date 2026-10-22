@@ -116,3 +116,6 @@ The tests cover the validators, the JSON import validation, the currency convers
 }
 
 An import file only needs `description`, `amount`, `currency`, `category` and `date`. New ids are generated on import.
+# Demonstration Video
+
+[Expense tracker](https://youtu.be/E7OyURKj8VA)
