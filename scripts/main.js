@@ -1,7 +1,10 @@
-import { addRecord, getRecords, deleteRecord, updateRecord } from './state.js';
+import { addRecord, getRecords, deleteRecord, updateRecord,importRecords, getSettings } from './state.js';
 import { renderRecords, showFieldError, renderDashboard } from './ui.js';
 import { compileRegex, filterRecords } from './search.js';
 import { sortRecords } from './sort.js';
+import  { hasStoredRecords } from './storage.js';
+import { initSettings } from './settings.js';
+import { parseImport, fetchSeed, downloadJson } from './transfer.js';
 import { computeStats, lastSevenDays,capStatus } from './stats.js'
 import {
     validateDescription,
@@ -15,8 +18,7 @@ let sortKey = null;
 let sortDirection = 'asc';
 let searchQuery = '';
 let caseSensitive = false;
-const BASE_CURRENCY = 'USD';
-const SPENDING_CAP = 1500;
+
 
 function sortedRecords() {
     return sortRecords(getRecords(), sortKey, sortDirection);
@@ -33,13 +35,19 @@ function render (newId = null) {
     renderRecords(records, { newId, error, total: sorted.length, regex, editingId});
 
     const all = getRecords();
-    const stats = computeStats(all);
+    const settings = getSettings();
+    const toBase = (record) => {
+        const rate = settings.rates?. [record.currency] || 1;
+        return record.amount * rate ;
+    };
+    const stats = computeStats(all, toBase);
+    const trend = lastSevenDays(all, new Date(), toBase);
     renderDashboard(
         stats,
-        lastSevenDays(all),
-        SPENDING_CAP,
-        capStatus(stats.total, SPENDING_CAP, BASE_CURRENCY),
-        BASE_CURRENCY
+        trend,
+        settings.cap,
+        capStatus(stats.total, settings.cap, settings.baseCurrency),
+        settings.baseCurrency
     )
 }
 function setSort(key) {
@@ -215,5 +223,60 @@ document.getElementById('case-sensitive')?.addEventListener('change', (event) =>
     caseSensitive = event.target.checked;
     render();
 })
+initSettings({ onChange: render });
 
+
+const backupStatus = document.getElementById('backup-status');
+const backupErrors = document.getElementById('backup-errors');
+
+function showBackupResult(message, errors = []) {
+  backupStatus.textContent = message;
+  backupErrors.replaceChildren(
+    ...errors.slice(0, 10).map((text) => {
+      const item = document.createElement('li');
+      item.textContent = text;
+      return item;
+    }),
+  );
+}
+
+document.getElementById('export-btn').addEventListener('click', () => {
+  const all = getRecords();
+  downloadJson(all);
+  showBackupResult(`Exported ${all.length} records.`);
+});
+
+document.getElementById('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const { records, errors } = parseImport(await file.text());
+  if (errors.length > 0) {
+    showBackupResult(`Import cancelled: ${errors.length} problem(s) found. Nothing was imported.`, errors);
+  } else {
+    importRecords(records);
+    render();
+    showBackupResult(`Imported ${records.length} records.`);
+  }
+  event.target.value = '';
+});
+
+document.getElementById('seed-btn').addEventListener('click', async () => {
+  const { records, errors } = await fetchSeed();
+  if (errors.length > 0) {
+    showBackupResult('Sample data could not be loaded.', errors);
+    return;
+  }
+  importRecords(records);
+  render();
+  showBackupResult(`Loaded ${records.length} sample records.`);
+});
+
+async function loadSeedIfFirstRun() {
+  if (hasStoredRecords()) return;
+  const { records, errors } = await fetchSeed();
+  if (errors.length === 0) importRecords(records);
+}
+
+await loadSeedIfFirstRun();
 render();

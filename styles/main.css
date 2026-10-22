@@ -730,3 +730,5 @@ input[type="file"]::file-selector-button {
 @media (min-width: 768px) {
     .backup-grid { grid-template-columns: repeat(3, 1fr); }
 }
+#settings-form { display: grid; gap: 0.75rem; max-width: 28rem; }
+#settings-form button[type="submit"] {justify-self: start;}

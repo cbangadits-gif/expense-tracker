@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,12 @@
     <link rel="stylesheet" href="styles/main.css">
     <script type="module" src="scripts/main.js"></script>
 </head>
+
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
-    
+
     <header>
-        <h1>Expense Tracker</h1>
+        <h1>Expense Tracker</h1>gi
         <nav aria-label="Main Navigation">
             <ul>
                 <li><a href="#about">About</a></li>
@@ -27,13 +29,18 @@
 
         <section id="about" aria-labelledby="about-heading">
             <h2 id="about-heading" tabindex="-1">About</h2>
-            <p class="lead">Expense Tracker is a small web app that helps students see where their money goes, search past expenses with regular expressions and stay under a monthly spending cap.</p>
+            <p class="lead">Expense Tracker is a small web app that helps students see where their money goes, search
+                past expenses with regular expressions and stay under a monthly spending cap.</p>
             <h3>What you can do</h3>
             <ul class="feature-grid">
-                <li><strong>Track expenses:</strong> Add, edit and delete records with a description, amount, currency, category and date</li>
-                <li><strong>Search with Regex:</strong> Type a regular expression and see matches highlighted instantly.</li>
-                <li><strong>Watch your budget:</strong> Set a spending cap and get a clear message when you get close or go over.</li>
-                <li><strong>Keep your data:</strong> Everything is saved in your browser. Import or export it as JSON at any time.</li>
+                <li><strong>Track expenses:</strong> Add, edit and delete records with a description, amount, currency,
+                    category and date</li>
+                <li><strong>Search with Regex:</strong> Type a regular expression and see matches highlighted instantly.
+                </li>
+                <li><strong>Watch your budget:</strong> Set a spending cap and get a clear message when you get close or
+                    go over.</li>
+                <li><strong>Keep your data:</strong> Everything is saved in your browser. Import or export it as JSON at
+                    any time.</li>
             </ul>
             <h3>How to use it</h3>
             <ol>
@@ -49,30 +56,51 @@
                 <li>Messages are announced to screen readers, and colors never carry meaning alone.</li>
             </ul>
             <h3>Built with</h3>
-            <p>Plain HTML, CSS and JavaScript (ES modules), no framework. Data stays on your device in <code>localStorage</code>.</p>
+            <p>Plain HTML, CSS and JavaScript (ES modules), no framework. Data stays on your device in
+                <code>localStorage</code>.
+            </p>
             <h3>Author</h3>
             <p>Chavy.Bangadi, 2026</p>
-            <p><a href="https://github.com/cbangadits-gif">GitHub</a> . <a href="mailto:c.bangadits@alustudent.com">c.bangadits@alustudent.com</a></p>
+            <p><a href="https://github.com/cbangadits-gif">GitHub</a> . <a
+                    href="mailto:c.bangadits@alustudent.com">c.bangadits@alustudent.com</a></p>
         </section>
 
         <section id="dashboard" aria-labelledby="dashboard-heading">
             <h2 id="dashboard-heading" tabindex="-1">Dashboard</h2>
             <dl>
-                <div><dt>Total Records</dt><dd id="stat-count">12</dd></div>
-                <div><dt>Total Amount</dt><dd id="stat-total">1,490.14 RWF</dd></div>
-                <div><dt>Top category</dt><dd id="stat-top">Fees</dd></div>
+                <div>
+                    <dt>Total Records</dt>
+                    <dd id="stat-count">12</dd>
+                </div>
+                <div>
+                    <dt>Total Amount</dt>
+                    <dd id="stat-total">1,490.14 RWF</dd>
+                </div>
+                <div>
+                    <dt>Top category</dt>
+                    <dd id="stat-top">Fees</dd>
+                </div>
             </dl>
             <div>
                 <h3>Spending cap</h3>
                 <p>Spending cap: <span id="budget-limit">1,500.00 RWF</span></p>
-                <div class="meter" data-state="near" aria-hidden="true"><div class="meter-fill" style="--w:99%"></div></div>
-                <p id="cap-message" role="status" aria-live="polite" class="cap-near">Careful, you are close to your cap. 9.86 RWF left.</p>
+                <div class="meter" data-state="near" aria-hidden="true">
+                    <div class="meter-fill" style="--w:99%"></div>
+                </div>
+                <p id="cap-message" role="status" aria-live="polite" class="cap-near">Careful, you are close to your
+                    cap. 9.86 RWF left.</p>
             </div>
             <div>
-            <h3>Last 7 days</h3>
-            <ol id="trend">
-                <li style="--h:30"></li><li style="--h:70"></li><li style="--h:20"></li><li style="--h:100"></li><li style="--h:45"></li><li style="--h:65"></li><li style="--h:35"></li>
-            </ol>
+                <h3>Last 7 days</h3>
+                <ol id="trend">
+                    <li style="--h:30"></li>
+                    <li style="--h:70"></li>
+                    <li style="--h:20"></li>
+                    <li style="--h:100"></li>
+                    <li style="--h:45"></li>
+                    <li style="--h:65"></li>
+                    <li style="--h:35"></li>
+                </ol>
             </div>
         </section>
 
@@ -82,51 +110,75 @@
                 <div class="search-field">
                     <label for="search">Search (regular expression)</label>
                     <div class="search-box">
-                        <input type="search" id="search" placeholder="e.g. (coffee|tea)" aria-describedby="search-status">
+                        <input type="search" id="search" placeholder="e.g. (coffee|tea)"
+                            aria-describedby="search-status">
                     </div>
-                </div>    
+                </div>
                 <label class="switch"><input type="checkbox" id="case-sensitive"> Case sensitive</label>
                 <div class="sort-buttons" role="group" aria-labelledby="sort-label">
                     <span class="sort-label" id="sort-label">Sort by</span>
-                    <button type="button" id="sort-date" aria-pressed="false">Date <span aria-hidden="true">&#8597;</span></button>
-                    <button type="button" id="sort-description" aria pressed="false">Description <span aria-hidden="true">&#8597;</span></button>
-                    <button type="button" id="sort-amount" aria-pressed="false">Amount <span aria-hidden="true">&#8597;</span></button>
-                </div>    
+                    <button type="button" id="sort-date" aria-pressed="false">Date <span
+                            aria-hidden="true">&#8597;</span></button>
+                    <button type="button" id="sort-description" aria-pressed="false">Description <span
+                            aria-hidden="true">&#8597;</span></button>
+                    <button type="button" id="sort-amount" aria-pressed="false">Amount <span
+                            aria-hidden="true">&#8597;</span></button>
+                </div>
             </div>
 
             <p id="search-status" role="status" aria-live="polite">4 results of 12</p>
 
             <table>
                 <caption class="visually-hidden">Expense records</caption>
-                <thead><tr><th scope="col">Date</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col">Amount</th><th scope="col">Actions</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
                 <tbody id="records-body">
                     <tr>
                         <td data-label="Date">2026-10-08</td>
                         <td data-label="Description">Lunch at cafeteria</td>
                         <td data-label="Category"><span class="chip">Food</span></td>
                         <td data-label="Amount">12.50 USD</td>
-                        <td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td>
+                        <td>
+                            <div class="actions"><button type="button" class="btn-small">Edit</button><button
+                                    type="button" class="btn-small btn-danger">Delete</button></div>
+                        </td>
                     </tr>
                     <tr>
                         <td data-label="Date">2026-10-07</td>
                         <td data-label="Description"><mark>Coffee</mark> with friends</td>
                         <td data-label="Category"><span class="chip">Leisure</span></td>
                         <td data-label="Amount">8.75 USD</td>
-                        <td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td>
+                        <td>
+                            <div class="actions"><button type="button" class="btn-small">Edit</button><button
+                                    type="button" class="btn-small btn-danger">Delete</button></div>
+                        </td>
                     </tr>
                     <tr>
                         <td data-label="Date">2026-10-06</td>
                         <td data-label="Description">Chemistry textbook</td>
                         <td data-label="Category"><span class="chip">Books</span></td>
                         <td data-label="Amount">89.99 USD</td>
-                        <td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td>
+                        <td>
+                            <div class="actions"><button type="button" class="btn-small">Edit</button><button
+                                    type="button" class="btn-small btn-danger">Delete</button></div>
+                        </td>
                     </tr>
                     <tr>
-                       <td data-label="Date">2026-10-05</td>
-                       <td data-label="Description">Monthly bus pass</td>
-                       <td data-label="Category"><span class="chip">Transport</span></td>
-                       <td data-label="Amount">45.00 USD</td>
-                       <td><div class="actions"><button type="button" class="btn-small">Edit</button><button type="button" class="btn-small btn-danger">Delete</button></div></td>
+                        <td data-label="Date">2026-10-05</td>
+                        <td data-label="Description">Monthly bus pass</td>
+                        <td data-label="Category"><span class="chip">Transport</span></td>
+                        <td data-label="Amount">45.00 USD</td>
+                        <td>
+                            <div class="actions"><button type="button" class="btn-small">Edit</button><button
+                                    type="button" class="btn-small btn-danger">Delete</button></div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -135,71 +187,120 @@
 
         <section id="add" aria-labelledby="add-heading">
             <h2 id="add-heading" tabindex="-1">Add expense</h2>
-            <p class="section-intro">Record a new expense. Fields marked <span class="req" aria-hidden="true">*</span> are required.</p>
+            <p class="section-intro">Record a new expense. Fields marked <span class="req" aria-hidden="true">*</span>
+                are required.</p>
             <form id="add-form" novalidate>
                 <div class="field field-description">
                     <label for="description">Description <span class="req" aria-hidden="true">*</span></label>
-                    <input type="text" id="description" placeholder="e.g. Lunch at cafeteria" required aria-describedby="description-hint description-error">
+                    <input type="text" id="description" placeholder="e.g. Lunch at cafeteria" required
+                        aria-describedby="description-hint description-error">
                     <p class="hint" id="description-hint">Short and clear, no space at the start or the end.</p>
                     <p class="error" id="description-error" aria-live="polite"></p>
                 </div>
                 <div class="field field-amount">
                     <label for="amount">Amount <span class="req" aria-hidden="true">*</span></label>
-                    <input type="text" id="amount" inputmode="decimal" placeholder="12.45" required aria-describedby="amount-hint amount-error">
+                    <input type="text" id="amount" inputmode="decimal" placeholder="12.45" required
+                        aria-describedby="amount-hint amount-error">
                     <p class="hint" id="amount-hint">Up to 2 decimals, for example 12.50.</p>
                     <p class="error" id="amount-error" aria-live="polite"></p>
                 </div>
                 <div class="field field-currency">
                     <label for="currency">Currency</label>
-                    <select id="currency"><option>USD</option><option>EUR</option><option>RWF</option></select>
+                    <select id="currency">
+                        <option>USD</option>
+                        <option>EUR</option>
+                        <option>RWF</option>
+                    </select>
                 </div>
                 <div class="field field-category">
                     <label for="category">Category <span class="req" aria-hidden="true">*</span></label>
-                     <input type="text" id="category" placeholder="e.g. Food" required aria-describedby="category-hint category-error">
-                     <p class="hint" id="category-hint">Letters, spaces or hyphens only.</p>
-                     <p class="error" id="category-error" aria-live="polite"></p>   
+                    <input type="text" id="category" placeholder="e.g. Food" required
+                        aria-describedby="category-hint category-error">
+                    <p class="hint" id="category-hint">Letters, spaces or hyphens only.</p>
+                    <p class="error" id="category-error" aria-live="polite"></p>
                 </div>
                 <div class="field field-date">
                     <label for="date">Date <span class="req" aria-hidden="true">*</span></label>
-                    <input type="text" id="date" placeholder="2026-10-01" required aria-describedby="date-hint date-error">
+                    <input type="text" id="date" placeholder="2026-10-01" required
+                        aria-describedby="date-hint date-error">
                     <p class="hint" id="date-hint">Format YYYY-MM-DD.</p>
-                    <p class="error" id="date-error" aria-live="polite"></p>  
+                    <p class="error" id="date-error" aria-live="polite"></p>
                 </div>
                 <button type="submit">Add expense</button>
             </form>
             <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
 
         </section>
-
         <section id="settings" aria-labelledby="settings-heading">
             <h2 id="settings-heading" tabindex="-1">Settings</h2>
+
             <div class="settings-block">
                 <h3>Backup</h3>
-                <p class="settings-help">Save your expenses to a file, restore them from one, or try the app with the sample data.</p>
+                <p class="settings-help">Save your expenses to a file, restore them from one, or try the app with sample
+                    data.</p>
+
                 <div class="backup-grid">
                     <div class="backup-card">
                         <h4>Export</h4>
                         <p>Download all your expenses as a JSON file.</p>
                         <button type="button" id="export-btn">Export JSON</button>
                     </div>
-                <div class="backup-card">
-                    <h4>Import</h4>
-                    <p>Add the expenses found in a JSON file.</p>
-                    <div class="backup-control">
-                        <label for="import-file">Choose a JSON file.</label>
-                        <input type="file" id="import-file"  accept=".json,application/json">
+                    <div class="backup-card">
+                        <h4>Import</h4>
+                        <p>Add the expenses found in a JSON file.</p>
+                        <div class="backup-control">
+                            <label for="import-file">Choose a JSON file</label>
+                            <input type="file" id="import-file" accept=".json,application/json">
+                        </div>
+                    </div>
+                    <div class="backup-card">
+                        <h4>Sample data</h4>
+                        <p>Add 12 example expenses to try the app.</p>
+                        <button type="button" id="seed-btn">Load sample data</button>
                     </div>
                 </div>
-                <div class="backup-card">
-                    <h4>Sample data</h4>
-                    <p>Add 12 examples expenses to try the app.</p> 
-                    <button type="button" id="seed-btn">Load sample data</button>
-                </div>
-            <div>
+
                 <p id="backup-status" role="status" aria-live="polite"></p>
                 <ul id="backup-errors" class="error"></ul>
             </div>
-            <p>Currency, exchange rates and the spending cap will be here soon.</p>
+
+            <div class="settings-block">
+                <h3>Currency and spending cap</h3>
+                <form id="settings-form" novalidate>
+                    <div class="field">
+                        <label for="base-currency">Base currency</label>
+                        <select id="base-currency">
+                            <option>USD</option>
+                            <option>EUR</option>
+                            <option>RWF</option>
+                        </select>
+                        <p class="hint">All totals and the cap use this currency. After changing it, enter the rates
+                            again.</p>
+                    </div>
+                    <div class="field">
+                        <label for="rate-USD">Value of 1 USD in the base currency</label>
+                        <input type="text" id="rate-USD" inputmode="decimal" aria-describedby="rate-USD-error">
+                        <p class="error" id="rate-USD-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="rate-EUR">Value of 1 EUR in the base currency</label>
+                        <input type="text" id="rate-EUR" inputmode="decimal" aria-describedby="rate-EUR-error">
+                        <p class="error" id="rate-EUR-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="rate-RWF">Value of 1 RWF in the base currency</label>
+                        <input type="text" id="rate-RWF" inputmode="decimal" aria-describedby="rate-RWF-error">
+                        <p class="error" id="rate-RWF-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="cap-input">Spending cap (in the base currency)</label>
+                        <input type="text" id="cap-input" inputmode="decimal" aria-describedby="cap-input-error">
+                        <p class="error" id="cap-input-error" aria-live="polite"></p>
+                    </div>
+                    <button type="submit">Save settings</button>
+                    <p id="settings-status" class="form-status" role="status" aria-live="polite"></p>
+                </form>
+            </div>
         </section>
         <dialog id="confirm-dialog" aria-labelledby="confirm-title">
             <form method="dialog">
@@ -212,8 +313,9 @@
             </form>
         </dialog>
     </main>
-    <footer><p>Chavy.Bangadi - 2026 - <a href="https://github.com/cbangadits-gif">GitHub</a></p></footer>
+    <footer>
+        <p>Chavy.Bangadi - 2026 - <a href="https://github.com/cbangadits-gif">GitHub</a></p>
+    </footer>
 </body>
-</html>
 
-            
+</html>
