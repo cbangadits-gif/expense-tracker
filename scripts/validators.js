@@ -1,3 +1,4 @@
+
 export const RE = {
   description: /^\S(?:.*\S)?$/,
   amount: /^(0|[1-9]\d*)(\.\d{1,2})?$/,

@@ -70,7 +70,6 @@ Everything can be done with the keyboard only: navigation, adding, searching, so
 
 ## Project structure
 
-```
 index.html
 tests.html
 seed.json
@@ -86,7 +85,7 @@ scripts/
   currency.js    manual currency conversion
   settings.js    settings and backup screen
   ui.js          DOM rendering
-```
+
 
 ## Running the app
 
@@ -99,13 +98,12 @@ ES modules do not work from `file://`, so use a local server:
 
 1. Start a local server as above.
 2. Open `http://localhost:8000/tests.html`.
-3. Every line must show ✅. The summary at the top shows how many passed.
+3. Every line must show. The summary at the top shows how many passed.
 
 The tests cover the validators, the JSON import validation, the currency conversion and `seed.json`.
 
 ## Data format
 
-```json
 {
   "id": "rec_0001",
   "description": "Lunch at cafeteria",
@@ -116,6 +114,5 @@ The tests cover the validators, the JSON import validation, the currency convers
   "createdAt": "2026-10-21T10:00:00.000Z",
   "updatedAt": "2026-10-21T10:00:00.000Z"
 }
-```
 
 An import file only needs `description`, `amount`, `currency`, `category` and `date`. New ids are generated on import.

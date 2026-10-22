@@ -28,9 +28,11 @@
     <script type="module">
         import {
             RE, validateDescription, validateAmount, validateDate,
-            validateCategory, validateId, validateRate
+            validateCategory, validateId, validateRate, validateCap,
+            validateCurrency, validateImport
         } from './scripts/validators.js';
-
+        import { parseJson, DEFAULT_SETTINGS } from './scripts/storage.js'
+        import { convert, formatMoney, totalInBase } from './scripts/currency.js'
         let passed = 0;
         let failed = 0;
         const results = document.querySelector('#results');
@@ -60,6 +62,8 @@
             [validateCategory, 'Category', ['Food', 'Fast-food', 'Study materials'], ['', 'Food1', 'A  B', '-Food', 'Food-', 'Caf\u00e9']],
             [validateId, 'Id (lookahead)', ['rec_0001', 'rec_42'], ['0001', 'REC_1', 'rec_', '']],
             [validateRate, 'Exchange rate (negative lookahead)', ['1.08', '1', '0.5'], ['0', '0.0', 'abc', '-1', '']],
+            [validateCap, 'Spending cap', ['1500', '99.50'], ['0', '', 'abc','-10',]],
+            [validateCurrency, 'Currency', ['USD', 'EUR', 'RWF'], ['XYZ', '', 'usd']],
         ];
 
         for (const [fn, title, valid, invalid] of suites) {
@@ -73,6 +77,61 @@
         check(dup, '"the Bus bus"', RE.duplicateWord.test('the Bus bus'), true);
         check(dup, '"bus pass"', RE.duplicateWord.test('bus pass'), false);
 
+        const imp = group('JSON import validation');
+        const good = { description: 'Lunch', amount: 12.5, currency: 'USD', category: 'Food', date: '2026-10-21' };
+        check(imp, 'valid array accepted', validateImport([good]).valid, true);
+        check(imp, 'amount given as text accepted', validateImport([{ ...good, amount: '12.50' }]).valid, true);
+        check(imp, 'object instead of array refused', validateImport({}).valid, false);
+        check(imp, 'null refused', validateImport(null).valid, false);
+        check(imp, 'empty array refused', validateImport([]).valid, false);
+        check(imp, 'array of numbers refused', validateImport([1, 2]).valid, false);
+        check(imp, 'missing description refused', validateImport([{ ...good, description: undefined }]).valid, false);
+        check(imp, 'negative amount refused', validateImport([{ ...good, amount: -5 }]).valid, false);
+        check(imp, 'unknown currency refused', validateImport([{ ...good, currency: 'XYZ' }]).valid, false);
+        check(imp, 'impossible date refused', validateImport([{ ...good, date: '2026-02-30' }]).valid, false);
+        check(imp, 'error names the record number',
+            validateImport([good, { ...good, amount: 'abc' }]).errors[0].startsWith('Record 2'), true);
+        check(imp, 'all problems are reported (2 errors)',
+            validateImport([{ ...good, amount: 'abc', date: 'nope' }]).errors.length, 2);
+
+        const json = group('parseJson');
+        check(json, 'malformed JSON gives an error', parseJson('{oops').error !== null, true);
+        check(json, 'valid JSON is parsed', Array.isArray(parseJson('[]').data), true);
+
+        const cur = group('Currency conversion');
+        const rates = DEFAULT_SETTINGS.rates;
+        check(cur, 'same currency unchanged', convert(10, 'USD', 'USD', rates), 10);
+        check(cur, '10 EUR in USD', Math.round(convert(10, 'EUR', 'USD', rates) * 100) / 100, 10.8);
+        check(cur, 'unknown currency gives null', convert(10, 'XYZ', 'USD', rates), null);
+        check(cur, 'formatMoney', formatMoney(12.5, 'USD'), '12.50 USD');
+        check(cur, 'totalInBase (10 USD + 10 EUR)',
+            Math.round(totalInBase([{ amount: 10, currency: 'USD' }, { amount: 10, currency: 'EUR' }],
+                { baseCurrency: 'USD', rates }) * 100) / 100, 20.8);
+
+        const seedGroup = group('seed.json');
+        try {
+            const seed = await (await fetch('./seed.json')).json();
+            check(seedGroup, 'has at least 10 records', Array.isArray(seed) && seed.length >= 10, true);
+            check(seedGroup, 'passes the import validation', validateImport(seed).valid, true);
+        } catch (e) {
+            check(seedGroup, `seed.json could not be loaded (${e.message})`, false, true);
+        }
+
+        const statsGroup = group('Stats with currency conversion');
+        try {
+            const { computeStats, lastSevenDays } = await import('./scripts/stats.js');
+            const toBase = (record) => record.amount * ({ USD: 1, EUR: 2 }[record.currency] ?? 1);
+            const mixed = [
+                { category: 'Food', amount: 100, currency: 'EUR', date: '2026-10-21' },
+                { category: 'Books', amount: 50, currency: 'USD', date: '2026-10-21' },
+            ];
+            check(statsGroup, 'total with conversion (100 EUR at 2 + 50 USD)', computeStats(mixed, toBase).total, 250);
+            check(statsGroup, 'top category with conversion', computeStats(mixed, toBase).topCategory, 'Food');
+            check(statsGroup, 'last 7 days with conversion',
+                JSON.stringify(lastSevenDays(mixed, new Date(2026, 9, 21), toBase)), '[0,0,0,0,0,0,250]');
+        } catch (e) {
+            check(statsGroup, `stats.js could not be tested (${e.message})`, false, true);
+        }
         const summary = document.querySelector('#summary');
         summary.textContent = `${passed} passed, ${failed} failed`;
         summary.className = failed === 0 ? 'pass' : 'fail';
